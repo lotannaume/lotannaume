@@ -1,0 +1,37 @@
+import pandas as pd
+import json
+
+# Assuming the JSON data is stored in a file called 'teams.json' in the /mnt/data directory
+json_data = {
+    'BRO': {
+        'BSN': { 'W': 10, 'L': 12 },
+        'CHC': { 'W': 15, 'L': 7 },
+        'CIN': { 'W': 15, 'L': 7 },
+        'NYG': { 'W': 14, 'L': 8 },
+        'PHI': { 'W': 14, 'L': 8 },
+        'PIT': { 'W': 15, 'L': 7 },
+        'STL': { 'W': 11, 'L': 11 }
+    },
+    # ... the rest of the data
+}
+
+# Create a list of team names (keys of the JSON data)
+teams = list(json_data.keys())
+
+# Initialize an empty dataframe with team names as both rows and columns
+df = pd.DataFrame(index=teams, columns=teams)
+
+# Fill the dataframe with the win-loss records
+for team, opponents in json_data.items():
+    for opponent, record in opponents.items():
+        # Assuming we want to display wins for the team row against the team column
+        df.loc[team, opponent] = f"{record['W']} - {record['L']}"
+
+# Replace NaN values with '--' to indicate no game played between the same teams
+df.fillna('--', inplace=True)
+
+# Output the dataframe to a CSV file
+output_file = '/mnt/data/head_to_head_records.csv'
+df.to_csv(output_file)
+
+output_file
